@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Light Control</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+        const client = mqtt.connect("wss://test.mosquitto.org:8081/mqtt"); //This is the web socket am using
+
+client.on("connect", function () {
+    console.log(" Connected to MQTT Broker!");
+});
+
+client.on("error", function (error) {
+    console.error(" MQTT Connection Error:", error);
+});
+
+function sendCommand(command) {
+    console.log("📡 Sending command:", command);
+    client.publish("/student_group/light_control", command);
+    document.getElementById("status").innerText = "Last sent command: " + command;
+}
+
+// ON or OFF Buttons
+document.getElementById("onButton").addEventListener("click", function () {
+    sendCommand("ON");
+});
+
+document.getElementById("offButton").addEventListener("click", function () {
+    sendCommand("OFF");
+});
+
+    </script>
+</head>
+<body>
+    <h2>MQTT Light Control</h2>
+    <button onclick="sendCommand('ON')">Turn ON</button>
+    <button onclick="sendCommand('OFF')">Turn OFF</button>
+    <p id="status">Last Command: None</p>
+</body>
+</html>
